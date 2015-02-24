@@ -390,11 +390,11 @@
                         _valuesStart[ property ] = _valuesStartRepeat[ property ];
 
                     }
-                    
+
                     if (_yoyo) {
                         _reversed = !_reversed;
                     }
-                    
+
                     _startTime = time + _delayTime;
 
                     return true;

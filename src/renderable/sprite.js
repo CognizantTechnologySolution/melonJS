@@ -185,7 +185,7 @@
          */
         scale : function (ratioX, ratioY) {
             var x = ratioX;
-            var y = typeof(ratioY) === "undefined" ? ratioX : ratioY;
+            var y = typeof ratioY === "undefined" ? ratioX : ratioY;
             if (x > 0) {
                 this._scale.x = this._scale.x < 0.0 ? -x : x;
             }
@@ -262,7 +262,7 @@
             var w = this.width, h = this.height;
             var angle = this.angle + this._sourceAngle;
 
-            if ((this.scaleFlag) || (angle !== 0)) {
+            if (this.scaleFlag || angle) {
                 // save context
                 renderer.save();
 
@@ -274,11 +274,11 @@
                 if (this.scaleFlag) {
                     renderer.scale(this._scale.x, this._scale.y);
                 }
-                if (angle !== 0) {
+                if (angle) {
                     renderer.rotate(angle);
                 }
 
-                if (this._sourceAngle !== 0) {
+                if (this._sourceAngle) {
                     // swap w and h for rotated source images
                     w = this.height;
                     h = this.width;
@@ -301,7 +301,7 @@
                 w, h                            // dw,dh
             );
 
-            if ((this.scaleFlag) || (angle !== 0)) {
+            if (this.scaleFlag || angle) {
                 // restore context
                 renderer.restore();
             }

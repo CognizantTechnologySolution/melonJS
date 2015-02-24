@@ -86,7 +86,7 @@
             // XXX: Keep this check?
             if (!this.image) {
                 throw new me.Error((
-                    (typeof(settings.image) === "string") ?
+                    (typeof settings.image === "string") ?
                     "'" + settings.image + "'" :
                     "Image"
                 ) + " file for Image Layer '" + this.name + "' not found!");
@@ -119,13 +119,13 @@
              */
             this.ratio = new me.Vector2d(1.0, 1.0);
 
-            if (typeof(settings.ratio) !== "undefined") {
-                // little hack for backward compatiblity
-                if (typeof(settings.ratio) === "number") {
-                    this.ratio.set(settings.ratio, settings.ratio);
-                } else /* vector */ {
-                    this.ratio.setV(settings.ratio);
-                }
+            // little hack for backward compatiblity
+            if (typeof settings.ratio === "number") {
+                this.ratio.set(settings.ratio, settings.ratio);
+            }
+            else if (typeof settings.ratio !== "undefined") {
+                /* vector */
+                this.ratio.setV(settings.ratio);
             }
 
             // last position of the viewport
@@ -234,11 +234,13 @@
         draw : function (renderer, rect) {
             // translate default position using the anchorPoint value
             var viewport = me.game.viewport;
-            var shouldTranslate = this.anchorPoint.y !== 0 || this.anchorPoint.x !== 0 || this.pos.y !== 0 || this.pos.x !== 0;
-            var translateX = ~~(this.pos.x + (this.anchorPoint.x * (viewport.width - this.imagewidth)));
-            var translateY = ~~(this.pos.y + (this.anchorPoint.y * (viewport.height - this.imageheight)));
+            var shouldTranslate = this.anchorPoint.y || this.anchorPoint.x || this.pos.y || this.pos.x;
+            var translateX = 0;
+            var translateY = 0;
 
             if (shouldTranslate) {
+                translateX = ~~(this.pos.x + (this.anchorPoint.x * (viewport.width - this.imagewidth)));
+                translateY = ~~(this.pos.y + (this.anchorPoint.y * (viewport.height - this.imageheight)));
                 renderer.translate(translateX, translateY);
             }
 
@@ -248,7 +250,7 @@
             var sw, sh;
 
             // if not scrolling ratio define, static image
-            if (0 === this.ratio.x && 0 === this.ratio.y) {
+            if (!this.ratio.x && !this.ratio.y) {
                 // static image
                 sw = Math.min(rect.width, this.imagewidth);
                 sh = Math.min(rect.height, this.imageheight);
@@ -406,7 +408,7 @@
             this.hexsidelength = +layer[TMXConstants.TMX_HEXSIDELEN] || undefined;
 
             // layer opacity
-            var visible = typeof(layer[TMXConstants.TMX_TAG_VISIBLE]) !== "undefined" ? layer[TMXConstants.TMX_TAG_VISIBLE] : true;
+            var visible = typeof layer[TMXConstants.TMX_TAG_VISIBLE] !== "undefined" ? layer[TMXConstants.TMX_TAG_VISIBLE] : true;
             this.setOpacity(visible ? +layer[TMXConstants.TMX_TAG_OPACITY] : 0);
 
             // layer "real" size

@@ -134,17 +134,17 @@
             var bounds = this.body.updateBounds();
 
             // resize the entity if required
-            if (this.width === 0 && this.height === 0) {
+            if (!this.width && !this.height) {
                 this.resize(bounds.width, bounds.height);
             }
 
             // set the  collision mask if defined
-            if (typeof(settings.collisionMask) !== "undefined") {
+            if (typeof settings.collisionMask !== "undefined") {
                 this.body.setCollisionMask(settings.collisionMask);
             }
 
             // set the  collision mask if defined
-            if (typeof(settings.collisionType) !== "undefined") {
+            if (typeof settings.collisionType !== "undefined") {
                 if (typeof me.collision.types[settings.collisionType] !== "undefined") {
                     this.body.collisionType = me.collision.types[settings.collisionType];
                 } else {

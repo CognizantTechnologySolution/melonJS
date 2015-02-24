@@ -159,17 +159,17 @@
     };
 
     // call the library init function when ready
-    // (this should not be here?)
-    if (me.skipAutoInit !== true) {
-        window.onReady(function () {
-            me.boot();
-        });
-    }
-    else {
+    // (XXX: this should not be here?)
+    if (me.skipAutoInit) {
         me.init = function () {
             me.boot();
             domReady();
         };
+    }
+    else {
+        window.onReady(function () {
+            me.boot();
+        });
     }
 
     if (!window.throttle) {
@@ -207,13 +207,13 @@
         };
     }
 
-    if (typeof console === "undefined") {
+    if (!window.console) {
         /**
          * Dummy console.log to avoid crash
          * in case the browser does not support it
          * @ignore
          */
-        console = { // jshint ignore:line
+        window.console = {
             log : function () {},
             info : function () {},
             error : function () {

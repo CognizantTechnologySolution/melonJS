@@ -276,7 +276,7 @@
          */
         api.getImage = function (image) {
             return (
-                (typeof(image) === "string") ?
+                (typeof image === "string") ?
                 me.loader.getImage(me.utils.getBasename(image)) :
                 image
             );

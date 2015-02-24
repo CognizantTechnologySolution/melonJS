@@ -149,7 +149,7 @@
 
         if (document.location.hash) {
             document.location.hash.substr(1).split("&").filter(function (value) {
-                return (value !== "");
+                return value;
             }).forEach(function (value) {
                 var kv = value.split("=");
                 var k = kv.shift();

@@ -21,7 +21,7 @@
 
         readMap: function (map, data) {
             // if already loaded, do nothing
-            if (map.initialized === true) {
+            if (map.initialized) {
                 return;
             }
 
@@ -78,7 +78,7 @@
             }
 
             // initialize a default TMX renderer
-            if ((me.game.tmxRenderer === null) || !me.game.tmxRenderer.canRender(map)) {
+            if ((!me.game.tmxRenderer) || !me.game.tmxRenderer.canRender(map)) {
                 me.game.tmxRenderer = this.getNewDefaultRenderer(map);
             }
 
@@ -90,7 +90,7 @@
 
             // parse all tileset objects
             var tilesets = data.tilesets || data.tileset;
-            if (Array.isArray(tilesets) === true) {
+            if (Array.isArray(tilesets)) {
                 tilesets.forEach(function (tileset) {
                     // add the new tileset
                     map.tilesets.add(self.readTileset(tileset));
@@ -102,7 +102,7 @@
             // parse layer information
 
             // native JSON format
-            if (typeof (data.layers) !== "undefined") {
+            if (data.layers) {
                 data.layers.forEach(function (layer) {
                     switch (layer.type) {
                         case TMXConstants.TMX_TAG_IMAGE_LAYER :
@@ -117,18 +117,15 @@
                         case TMXConstants.TMX_TAG_OBJECTGROUP:
                             map.objectGroups.push(self.readObjectGroup(map, layer, zOrder++));
                             break;
-
-                        default:
-                            break;
                     }
                 });
-            } else if (typeof (data.layer) !== "undefined") {
+            } else if (data.layer) {
                 // converted XML format
                 // in converted format, these are not under the generic layers structure
                 // and each element can be either an array of object of just one object
 
                 var layers = data.layer;
-                if (Array.isArray(layers) === true) {
+                if (Array.isArray(layers)) {
                     layers.forEach(function (layer) {
                         // get the object information
                         map.mapLayers.push(self.readLayer(map, layer, layer._draworder));
@@ -140,9 +137,9 @@
                 }
 
                 // in converted format, these are not under the generic layers structure
-                if (typeof(data[TMXConstants.TMX_TAG_OBJECTGROUP]) !== "undefined") {
-                    var groups = data[TMXConstants.TMX_TAG_OBJECTGROUP];
-                    if (Array.isArray(groups) === true) {
+                var groups = data[TMXConstants.TMX_TAG_OBJECTGROUP];
+                if (groups) {
+                    if (Array.isArray(groups)) {
                         groups.forEach(function (group) {
                             map.objectGroups.push(self.readObjectGroup(map, group, group._draworder));
                         });
@@ -154,9 +151,9 @@
                 }
 
                 // in converted format, these are not under the generic layers structure
-                if (typeof(data[TMXConstants.TMX_TAG_IMAGE_LAYER]) !== "undefined") {
-                    var imageLayers = data[TMXConstants.TMX_TAG_IMAGE_LAYER];
-                    if (Array.isArray(imageLayers) === true) {
+                var imageLayers = data[TMXConstants.TMX_TAG_IMAGE_LAYER];
+                if (imageLayers) {
+                    if (Array.isArray(imageLayers)) {
                         imageLayers.forEach(function (imageLayer) {
                             map.mapLayers.push(self.readImageLayer(map, imageLayer, imageLayer._draworder));
                         });
@@ -216,7 +213,7 @@
          */
         setLayerData : function (layer, rawdata, encoding, compression) {
             // data
-            var data = Array.isArray(rawdata) === true ? rawdata : rawdata.value;
+            var data = Array.isArray(rawdata) ? rawdata : rawdata.value;
 
             // decode data based on encoding type
             switch (encoding) {
@@ -236,7 +233,7 @@
                         // Base 64 decode
                         data = me.utils.decodeBase64AsArray(data, 4);
                         // check if data is compressed
-                        if (compression !== null) {
+                        if (compression) {
                             data = me.utils.decompress(data, compression);
                         }
                     }
@@ -252,9 +249,9 @@
             for (var y = 0 ; y < layer.rows; y++) {
                 for (var x = 0; x < layer.cols; x++) {
                     // get the value of the gid
-                    var gid = (encoding == null) ? this.TMXParser.getIntAttribute(data[idx++], TMXConstants.TMX_TAG_GID) : data[idx++];
+                    var gid = (!encoding) ? this.TMXParser.getIntAttribute(data[idx++], TMXConstants.TMX_TAG_GID) : data[idx++];
                     // fill the array
-                    if (gid !== 0) {
+                    if (gid) {
                         // add a new tile to the layer
                         layer.setTile(x, y, gid);
                     }
@@ -301,14 +298,14 @@
             );
 
             // set some additional flags
-            var visible = typeof(data[TMXConstants.TMX_TAG_VISIBLE]) !== "undefined" ? data[TMXConstants.TMX_TAG_VISIBLE] : true;
-            imageLayer.setOpacity((visible === true) ? (+data[TMXConstants.TMX_TAG_OPACITY] || 1.0).clamp(0.0, 1.0) : 0);
+            var visible = typeof data[TMXConstants.TMX_TAG_VISIBLE] !== "undefined" ? data[TMXConstants.TMX_TAG_VISIBLE] : true;
+            imageLayer.setOpacity(visible ? (+data[TMXConstants.TMX_TAG_OPACITY] || 1.0).clamp(0.0, 1.0) : 0);
 
             // check if we have any additional properties
             me.TMXUtils.applyTMXProperties(imageLayer, data);
 
             // make sure ratio is a vector (backward compatibility)
-            if (typeof(imageLayer.ratio) === "number") {
+            if (typeof imageLayer.ratio === "number") {
                 var ratio = imageLayer.ratio;
                 imageLayer.ratio = new me.Vector2d(ratio, ratio);
             }

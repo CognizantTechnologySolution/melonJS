@@ -173,7 +173,7 @@
          * @return {me.Matrix2d} Reference to this object for method chaining
          */
         rotate : function (angle) {
-            if (angle !== 0) {
+            if (angle) {
                 var a = this.val,
                     a0 = a[0],
                     a1 = a[1],

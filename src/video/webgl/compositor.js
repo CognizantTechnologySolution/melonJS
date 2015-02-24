@@ -346,7 +346,7 @@
 
             // Get the source texture region
             var region = texture.getRegion(key);
-            if (typeof(region) === "undefined") {
+            if (!region) {
                 // TODO: Require proper atlas regions instead of caching arbitrary region keys
                 console.warn("Adding texture region", key, "for texture", texture);
 

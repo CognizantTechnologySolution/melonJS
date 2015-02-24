@@ -338,7 +338,7 @@
          * @name onPause
          * @memberOf me.state
          */
-        api.onPause = null;
+        api.onPause = function () {};
 
         /**
          * onResume callback
@@ -346,7 +346,7 @@
          * @name onResume
          * @memberOf me.state
          */
-        api.onResume = null;
+        api.onResume = function () {};
 
         /**
          * onStop callback
@@ -354,7 +354,7 @@
          * @name onStop
          * @memberOf me.state
          */
-        api.onStop = null;
+        api.onStop = function () {};
 
         /**
          * onRestart callback
@@ -362,7 +362,7 @@
          * @name onRestart
          * @memberOf me.state
          */
-        api.onRestart = null;
+        api.onRestart = function () {};
 
         /**
          * @ignore
@@ -386,7 +386,7 @@
                 // stop the main loop
                 _stopRunLoop();
                 // current music stop
-                if (music === true) {
+                if (music) {
                     me.audio.pauseTrack();
                 }
 
@@ -395,10 +395,7 @@
 
                 // publish the stop notification
                 me.event.publish(me.event.STATE_STOP);
-                // any callback defined ?
-                if (typeof(api.onStop) === "function") {
-                    api.onStop();
-                }
+                api.onStop();
             }
         };
 
@@ -416,7 +413,7 @@
                 // stop the main loop
                 _pauseRunLoop();
                 // current music stop
-                if (music === true) {
+                if (music) {
                     me.audio.pauseTrack();
                 }
 
@@ -425,10 +422,7 @@
 
                 // publish the pause event
                 me.event.publish(me.event.STATE_PAUSE);
-                // any callback defined ?
-                if (typeof(api.onPause) === "function") {
-                    api.onPause();
-                }
+                api.onPause();
             }
         };
 
@@ -445,7 +439,7 @@
                 // restart the main loop
                 _startRunLoop();
                 // current music stop
-                if (music === true) {
+                if (music) {
                     me.audio.resumeTrack();
                 }
 
@@ -457,10 +451,7 @@
 
                 // publish the restart notification
                 me.event.publish(me.event.STATE_RESTART, [ _pauseTime ]);
-                // any callback defined ?
-                if (typeof(api.onRestart) === "function") {
-                    api.onRestart();
-                }
+                api.onRestart();
             }
         };
 
@@ -477,7 +468,7 @@
                 // resume the main loop
                 _resumeRunLoop();
                 // current music stop
-                if (music === true) {
+                if (music) {
                     me.audio.resumeTrack();
                 }
 
@@ -486,10 +477,7 @@
 
                 // publish the resume event
                 me.event.publish(me.event.STATE_RESUME, [ _pauseTime ]);
-                // any callback defined ?
-                if (typeof(api.onResume) === "function") {
-                    api.onResume();
-                }
+                api.onResume();
             }
         };
 
@@ -627,7 +615,7 @@
          */
         api.change = function (state) {
             // Protect against undefined ScreenObject
-            if (typeof(_screenObject[state]) === "undefined") {
+            if (!_screenObject[state]) {
                 throw new me.Error("Undefined ScreenObject for state '" + state + "'");
             }
 

@@ -83,7 +83,7 @@
             this.isHoldable = false;
 
             // object has been updated (clicked,etc..)
-            this.holdTimeout = null;
+            this.holdTimeout = 0;
             this.updated = false;
             this.released = true;
 
@@ -125,7 +125,7 @@
             if ((event.which === 1 || me.device.touch) && this.isClickable) {
                 this.updated = true;
                 if (this.isHoldable) {
-                    if (this.holdTimeout !== null) {
+                    if (this.holdTimeout) {
                         me.timer.clearTimeout(this.holdTimeout);
                     }
                     this.holdTimeout = me.timer.setTimeout(this.hold.bind(this), this.holdThreshold, false);

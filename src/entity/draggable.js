@@ -93,7 +93,7 @@ me.DraggableEntity = (function (Entity, Input, Event, Vector) {
          * @param {Object} x the pointer event
          */
         dragStart: function (e) {
-            if (this.dragging === false) {
+            if (!this.dragging) {
                 this.dragging = true;
                 this.dragId = e.pointerId;
                 this.grabOffset.set(e.gameX, e.gameY);
@@ -110,7 +110,7 @@ me.DraggableEntity = (function (Entity, Input, Event, Vector) {
          * @param {Object} x the pointer event
          */
         dragMove: function (e) {
-            if (this.dragging === true) {
+            if (this.dragging) {
                 if (this.dragId === e.pointerId) {
                     this.pos.set(e.gameX, e.gameY);
                     this.pos.sub(this.grabOffset);
@@ -127,7 +127,7 @@ me.DraggableEntity = (function (Entity, Input, Event, Vector) {
          * @param {Object} x the pointer event
          */
         dragEnd: function () {
-            if (this.dragging === true) {
+            if (this.dragging) {
                 this.pointerId = undefined;
                 this.dragging = false;
                 return false;

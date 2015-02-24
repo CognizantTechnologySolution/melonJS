@@ -122,7 +122,7 @@
                         obj.z = group.z;
 
                         //apply group opacity value to the child objects if group are merged
-                        if (me.game.mergeGroup === true && obj.isRenderable === true) {
+                        if (me.game.mergeGroup && obj.isRenderable) {
                             obj.setOpacity(obj.getOpacity() * group.opacity);
                             // and to child renderables if any
                             if (obj.renderable instanceof me.Renderable) {
@@ -135,7 +135,7 @@
                 }
 
                 // if we created a new container
-                if (me.game.mergeGroup === false) {
+                if (!me.game.mergeGroup) {
                     // add our container to the world
                     container.addChild(targetContainer);
 
@@ -188,7 +188,7 @@
          */
         api.addTMXLevel = function (levelId, callback) {
             // just load the level with the XML stuff
-            if (levels[levelId] == null) {
+            if (!levels[levelId]) {
                 //console.log("loading "+ levelId);
                 levels[levelId] = new me.TMXTileMap(levelId);
                 // set the name of the level
@@ -196,7 +196,7 @@
                 // level index
                 levelIdx.push(levelId);
             }
-            else  {
+            else {
                 //console.log("level %s already loaded", levelId);
                 return false;
             }
@@ -235,7 +235,7 @@
          */
         api.loadLevel = function (levelId) {
             // throw an exception if not existing
-            if (typeof(levels[levelId]) === "undefined") {
+            if (!levels[levelId]) {
                 throw new me.Error("level " + levelId + " not found");
             }
 

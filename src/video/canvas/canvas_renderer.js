@@ -204,13 +204,13 @@
         scaleCanvas : function (scaleX, scaleY) {
             this.canvas.width = this.gameWidthZoom = this.backBufferCanvas.width * scaleX;
             this.canvas.height = this.gameHeightZoom = this.backBufferCanvas.height * scaleY;
-            
+
             // adjust CSS style for High-DPI devices
             if (me.device.getPixelRatio() > 1) {
                 this.canvas.style.width = (this.canvas.width / me.device.getPixelRatio()) + "px";
                 this.canvas.style.height = (this.canvas.height / me.device.getPixelRatio()) + "px";
             }
-            
+
             if (this.doubleBuffering && this.transparent) {
                 // Clears the front buffer for each frame blit
                 this.context.globalCompositeOperation = "copy";

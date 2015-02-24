@@ -66,7 +66,7 @@
             this._super(me.Sprite, "init", [ x, y, settings ]);
 
             // store/reset the current atlas information
-            if (typeof(settings.atlas) !== "undefined") {
+            if (settings.atlas) {
                 this.textureAtlas = settings.atlas;
                 this.atlasIndices = settings.atlasIndices;
             } else {
@@ -119,7 +119,7 @@
                 nextFrame : 0
             };
 
-            if (index == null) {
+            if (!index) {
                 index = [];
                 // create a default animation with all frame
                 Object.keys(this.textureAtlas).forEach(function (v, i) {
@@ -131,14 +131,14 @@
             var counter = 0;
             // set each frame configuration (offset, size, etc..)
             for (var i = 0, len = index.length; i < len; i++) {
-                if (typeof(index[i]) === "number") {
-                    if (typeof (this.textureAtlas[index[i]]) !== "undefined") {
+                if (typeof index[i] === "number") {
+                    if (this.textureAtlas[index[i]]) {
                         // TODO: adding the cache source coordinates add undefined entries in webGL mode
-                        this.anim[name].frame["" + i] = this.textureAtlas[index[i]];
+                        this.anim[name].frame[i] = this.textureAtlas[index[i]];
                         counter++;
                     }
                 } else { // string
-                    if (this.atlasIndices === null) {
+                    if (!this.atlasIndices) {
                         throw new me.Renderable.Error(
                             "string parameters for addAnimation are not allowed for standard spritesheet based Texture"
                         );
@@ -265,7 +265,7 @@
 
                     // switch animation if we reach the end of the strip
                     // and a callback is defined
-                    if (this.current.idx === 0 && this.resetAnim)  {
+                    if (!this.current.idx && this.resetAnim) {
                         // if string, change to the corresponding animation
                         if (typeof this.resetAnim === "string") {
                             this.setCurrentAnimation(this.resetAnim);

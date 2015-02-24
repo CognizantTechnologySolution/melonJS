@@ -67,9 +67,9 @@
              */
             this.objects = [];
 
-            var visible = typeof(tmxObjGroup[TMXConstants.TMX_TAG_VISIBLE]) !== "undefined" ? tmxObjGroup[TMXConstants.TMX_TAG_VISIBLE] : true;
+            var visible = typeof tmxObjGroup[TMXConstants.TMX_TAG_VISIBLE] !== "undefined" ? tmxObjGroup[TMXConstants.TMX_TAG_VISIBLE] : true;
 
-            this.opacity = (visible === true) ? (+tmxObjGroup[TMXConstants.TMX_TAG_OPACITY] || 1.0).clamp(0.0, 1.0) : 0;
+            this.opacity = visible ? (+tmxObjGroup[TMXConstants.TMX_TAG_OPACITY] || 1.0).clamp(0.0, 1.0) : 0;
 
             // check if we have any user-defined properties
             me.TMXUtils.applyTMXProperties(this, tmxObjGroup);
@@ -78,7 +78,7 @@
             // (under `objects` for XML converted map, under `object` for native json map)
             var _objects = tmxObjGroup.objects || tmxObjGroup.object;
             var self = this;
-            if (Array.isArray(_objects) === true) {
+            if (Array.isArray(_objects)) {
                 // JSON native format
                 _objects.forEach(function (tmxObj) {
                     self.objects.push(new me.TMXObject(tmxObj, orientation, tilesets, z));
@@ -281,23 +281,24 @@
                 this.setTile(tilesets);
             }
             else {
-                if (typeof(tmxObj[TMXConstants.TMX_TAG_ELLIPSE]) !== "undefined") {
+                if (typeof tmxObj[TMXConstants.TMX_TAG_ELLIPSE] !== "undefined") {
                     this.isEllipse = true;
                 }
                 else {
                     var points = tmxObj[TMXConstants.TMX_TAG_POLYGON];
-                    if (typeof(points) !== "undefined") {
+                    if (points) {
                         this.isPolygon = true;
                     }
                     else {
                         points = tmxObj[TMXConstants.TMX_TAG_POLYLINE];
-                        if (typeof(points) !== "undefined") {
+                        if (points) {
                             this.isPolyLine = true;
                         }
                     }
-                    if (typeof(points) !== "undefined") {
+
+                    if (points) {
                         this.points = [];
-                        if (typeof(points.points) !== "undefined") {
+                        if (points.points) {
                             // get a point array
                             points = points.points.split(" ");
                             // and normalize them into an array of vectors
@@ -359,7 +360,7 @@
             var shapes = [];
 
             // add an ellipse shape
-            if (this.isEllipse === true) {
+            if (this.isEllipse) {
                 // ellipse coordinates are the center position, so set default to the corresonding radius
                 shapes.push((new me.Ellipse(
                     this.width / 2,
@@ -370,12 +371,12 @@
             }
 
             // add a polygon
-            else if (this.isPolygon === true) {
+            else if (this.isPolygon) {
                 shapes.push((new me.Polygon(0, 0, this.points)).rotate(this.rotation));
             }
 
             // add a polyline
-            else if (this.isPolyLine === true) {
+            else if (this.isPolyLine) {
                 var p = this.points;
                 var p1, p2;
                 var segments = p.length - 1;
@@ -384,7 +385,7 @@
                     // is reused later by the next segment
                     p1 = p[i];
                     p2 = p[i + 1].clone();
-                    if (this.rotation !== 0) {
+                    if (this.rotation) {
                         p1 = p1.rotate(this.rotation);
                         p2 = p2.rotate(this.rotation);
                     }

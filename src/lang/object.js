@@ -123,7 +123,6 @@ if (!Object.assign) {
      * console.log(obj);
      * // { a: 1, b: 2, c: 3 }
      */
-
     Object.defineProperty(Object, "assign", {
         enumerable: false,
         configurable: true,
@@ -273,7 +272,7 @@ if (!Object.assign) {
         Object.keys(descriptor).forEach(function (method) {
             methods[method] = descriptor[method];
 
-            if (typeof(descriptor[method]) !== "function") {
+            if (typeof descriptor[method] !== "function") {
                 throw new TypeError(
                     "extend: Method `" + method + "` is not a function"
                 );

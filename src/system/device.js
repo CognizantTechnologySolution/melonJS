@@ -16,7 +16,7 @@
         // private properties
         var accelInitialized = false;
         var deviceOrientationInitialized = false;
-        var devicePixelRatio = null;
+        var devicePixelRatio = 0;
 
         /**
          * check the device capapbilities
@@ -38,9 +38,8 @@
 
             // accelerometer detection
             me.device.hasAccelerometer = (
-                (typeof (window.DeviceMotionEvent) !== "undefined") || (
-                    (typeof (window.Windows) !== "undefined") &&
-                    (typeof (Windows.Devices.Sensors.Accelerometer) === "function")
+                (window.DeviceMotionEvent) || (
+                    (window.Windows && typeof Windows.Devices.Sensors.Accelerometer === "function")
                 )
             );
 
@@ -111,7 +110,7 @@
             }
 
             // register on the event if supported
-            if (typeof (visibilityChange) === "string") {
+            if (visibilityChange) {
                 // add the corresponding event listener
                 document.addEventListener(visibilityChange,
                     function () {
@@ -230,7 +229,7 @@
          * @name nativeBase64
          * @memberOf me.device
          */
-        api.nativeBase64 = (typeof(window.atob) === "function");
+        api.nativeBase64 = (typeof window.atob === "function");
 
         /**
          * Touch capabilities
@@ -441,9 +440,9 @@
          */
         api.getPixelRatio = function () {
 
-            if (devicePixelRatio === null) {
+            if (!devicePixelRatio) {
                 var _context;
-                if (typeof me.video.renderer !== "undefined") {
+                if (me.video.renderer) {
                     _context = me.video.renderer.getScreenContext();
                 } else {
                     _context = me.Renderer.prototype.getContext2d(document.createElement("canvas"));
@@ -569,11 +568,7 @@
         api.watchAccelerometer = function () {
             if (me.device.hasAccelerometer) {
                 if (!accelInitialized) {
-                    if (typeof Windows === "undefined") {
-                        // add a listener for the devicemotion event
-                        window.addEventListener("devicemotion", onDeviceMotion, false);
-                    }
-                    else {
+                    if (window.Windows) {
                         // On Windows 8 Device
                         var accelerometer = Windows.Devices.Sensors.Accelerometer.getDefault();
                         if (accelerometer) {
@@ -584,6 +579,10 @@
 
                             accelerometer.addEventListener("readingchanged", onDeviceMotion, false);
                         }
+                    }
+                    else {
+                        // add a listener for the devicemotion event
+                        window.addEventListener("devicemotion", onDeviceMotion, false);
                     }
                     accelInitialized = true;
                 }
@@ -601,14 +600,15 @@
          */
         api.unwatchAccelerometer = function () {
             if (accelInitialized) {
-                if (typeof Windows === "undefined") {
-                    // add a listener for the mouse
-                    window.removeEventListener("devicemotion", onDeviceMotion, false);
-                } else {
+                if (window.Windows) {
                     // On Windows 8 Devices
                     var accelerometer = Windows.Device.Sensors.Accelerometer.getDefault();
 
                     accelerometer.removeEventListener("readingchanged", onDeviceMotion, false);
+                }
+                else {
+                    // add a listener for the mouse
+                    window.removeEventListener("devicemotion", onDeviceMotion, false);
                 }
                 accelInitialized = false;
             }

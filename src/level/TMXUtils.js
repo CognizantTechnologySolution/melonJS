@@ -54,7 +54,7 @@
             if (elt.attributes && elt.attributes.length > 0) {
                 for (var j = 0; j < elt.attributes.length; j++) {
                     var attribute = elt.attributes.item(j);
-                    if (typeof(attribute.name) !== "undefined") {
+                    if (attribute.name) {
                         // DOM4 (Attr no longer inherit from Node)
                         obj[attribute.name] = setTMXValue(attribute.value);
                     } else {
@@ -77,7 +77,6 @@
             var cacheValue = "";
 
             // make sure draworder is defined
-            // note: `draworder` is a new object property in next coming version of Tiled
             draworder = draworder || 1;
 
             if (xml.nodeType === 1) {
@@ -91,7 +90,15 @@
                     var item = xml.childNodes.item(i);
                     var nodeName = item.nodeName;
 
-                    if (typeof(obj[nodeName]) === "undefined") {
+                    if (obj[nodeName]) {
+                        if (!Array.isArray(obj[nodeName])) {
+                            obj[nodeName] = [ obj[nodeName] ];
+                        }
+                        var node = me.TMXUtils.parse(item, draworder);
+                        node._draworder = draworder++;
+                        obj[nodeName].push(node);
+                    }
+                    else {
                         if (item.nodeType === 3) {
                             /* nodeType is "Text"  */
                             var value = item.nodeValue.trim();
@@ -101,16 +108,9 @@
                         }
                         else if (item.nodeType === 1) {
                             /* nodeType is "Element" */
-                            obj[nodeName] =  me.TMXUtils.parse(item, draworder);
+                            obj[nodeName] = me.TMXUtils.parse(item, draworder);
                             obj[nodeName]._draworder = draworder++;
                         }
-                    }
-                    else {
-                        if (Array.isArray(obj[nodeName]) === false) {
-                            obj[nodeName] = [obj[nodeName]];
-                        }
-                        obj[nodeName].push(me.TMXUtils.parse(item, draworder));
-                        obj[nodeName][obj[nodeName].length - 1]._draworder = draworder++;
                     }
                 }
                 // set concatenated string value
@@ -129,11 +129,11 @@
          */
         api.applyTMXProperties = function (obj, data) {
             var properties = data[TMXConstants.TMX_TAG_PROPERTIES];
-            if (typeof(properties) !== "undefined") {
-                if (typeof(properties.property) !== "undefined") {
+            if (properties) {
+                var property = properties.property;
+                if (property) {
                     // XML converted format
-                    var property = properties.property;
-                    if (Array.isArray(property) === true) {
+                    if (Array.isArray(property)) {
                         property.forEach(function (prop) {
                             // value are already converted in this case
                             obj[prop.name] = prop.value;

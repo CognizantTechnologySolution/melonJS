@@ -65,11 +65,11 @@
          */
         singleton.patch = function (proto, name, fn) {
             // use the object prototype if possible
-            if (typeof proto.prototype !== "undefined") {
+            if (proto.prototype) {
                 proto = proto.prototype;
             }
             // reuse the logic behind Object.extend
-            if (typeof(proto[name]) === "function") {
+            if (typeof proto[name] === "function") {
                 // save the original function
                 var _parent = proto[name];
                 // override the function with the new one

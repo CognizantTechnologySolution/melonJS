@@ -5,11 +5,11 @@
  */
 
 // define window.performance if undefined
-if (typeof window.performance === "undefined") {
+if (!window.performance) {
     window.performance = {};
 }
 
-if (typeof Date.now === "undefined") {
+if (!Date.now) {
     /**
      * provide a replacement for browser not
      * supporting Date.now (JS 1.5)

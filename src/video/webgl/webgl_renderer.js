@@ -309,14 +309,14 @@
          * @return {WebGLContext}
          */
         getContextGL : function (c, opaque) {
-            if (typeof c === "undefined" || c === null) {
+            if (!c) {
                 throw new me.video.Error(
                     "You must pass a canvas element in order to create " +
                     "a GL context"
                 );
             }
 
-            if (typeof c.getContext === "undefined") {
+            if (!c.getContext) {
                 throw new me.video.Error(
                     "Your browser does not support WebGL."
                 );
@@ -436,15 +436,6 @@
          */
         scale : function (x, y) {
             this.globalMatrix.scale(x, y);
-        },
-
-        /**
-         * not used by this renderer?
-         * @ignore
-         */
-        setAntiAlias : function (context, enable) {
-            this._super(me.Renderer, "setAntiAlias", [context, enable]);
-            // TODO: perhaps handle GLNEAREST or other options with texture binding
         },
 
         /**

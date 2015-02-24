@@ -54,7 +54,7 @@
             this.bounds = null;
 
             // camera deadzone
-            this.deadzone = null;
+            this.deadzone = new me.Rect(0, 0, 0, 0);
 
             // target to follow
             this.target = null;
@@ -171,10 +171,6 @@
          * @param {Number} h deadzone height
          */
         setDeadzone : function (w, h) {
-            if (this.deadzone === null) {
-                this.deadzone = new me.Rect(0, 0, 0, 0);
-            }
-
             // reusing the old code for now...
             this.deadzone.pos.set(
                 ~~((this.width - w) / 2),
@@ -242,7 +238,7 @@
             }
             // if axis is null, camera is moved on target center
             this.follow_axis = (
-                typeof(axis) === "undefined" ? this.AXIS.BOTH : axis
+                typeof axis === "undefined" ? this.AXIS.BOTH : axis
             );
             // force a camera update
             this.updateTarget();
@@ -326,9 +322,7 @@
                 if (this._shake.duration <= 0) {
                     this._shake.duration = 0;
                     this.offset.setZero();
-                    if (typeof(this._shake.onComplete) === "function") {
-                        this._shake.onComplete();
-                    }
+                    this._shake.onComplete();
                 }
                 else {
                     if (this._shake.axis === this.AXIS.BOTH ||
@@ -344,7 +338,7 @@
                 updated = true;
             }
 
-            if (updated === true) {
+            if (updated) {
                 //publish the corresponding message
                 me.event.publish(me.event.VIEWPORT_ONCHANGE, [this.pos]);
             }
@@ -381,7 +375,7 @@
                 intensity : intensity,
                 duration : duration,
                 axis : axis || this.AXIS.BOTH,
-                onComplete : onComplete
+                onComplete : onComplete || function () {}
             };
         },
 

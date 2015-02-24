@@ -33,9 +33,9 @@ only argument to the constructor.
 */
 
 (function () {
-   
+
     var DEFAULT_POWER_OF_TWO = 5;
-  
+
     function makeKeysFn(shift) {
         return function (obj) {
             var sx = obj.x >> shift,
@@ -43,15 +43,15 @@ only argument to the constructor.
                 ex = (obj.x + obj.width) >> shift,
                 ey = (obj.y + obj.height) >> shift,
                 x, y, keys = [];
-            for (y = sy;y <= ey;y++) {
-                for (x = sx;x <= ex;x++) {
-                    keys.push("" + x + ":" + y);
+            for (y = sy; y <= ey; y++) {
+                for (x = sx; x <= ex; x++) {
+                    keys.push(x + ":" + y);
                 }
             }
             return keys;
         };
     }
-  
+
     /**
     * @param {number} power_of_two - how many times the rects should be shifted
     *                                when hashing
@@ -65,19 +65,21 @@ only argument to the constructor.
         this.list = [];
         this._lastTotalCleared = 0;
     }
-  
+
     SpatialHash.prototype.clear = function () {
         var key;
         for (key in this.hash) {
-            if (this.hash[key].length === 0) {
-                delete this.hash[key];
-            } else {
-                this.hash[key].length = 0;
+            if (this.hash.hasOwnProperty(key)) {
+                if (!this.hash[key].length) {
+                    delete this.hash[key];
+                } else {
+                    this.hash[key].length = 0;
+                }
             }
         }
         this.list.length = 0;
     };
-  
+
     SpatialHash.prototype.getNumBuckets = function () {
         var key, count = 0;
         for (key in this.hash) {
@@ -89,11 +91,11 @@ only argument to the constructor.
         }
         return count;
     };
-  
+
     SpatialHash.prototype.insert = function (obj, rect) {
         var keys = this.getKeys(rect || obj), key, i;
         this.list.push(obj);
-        for (i = 0;i < keys.length;i++) {
+        for (i = 0; i < keys.length; i++) {
             key = keys[i];
             if (this.hash[key]) {
                 this.hash[key].push(obj);
@@ -109,7 +111,7 @@ only argument to the constructor.
             return this.list;
         }
         keys = this.getKeys(rect || obj);
-        for (i = 0;i < keys.length;i++) {
+        for (i = 0; i < keys.length; i++) {
             key = keys[i];
             if (this.hash[key]) {
                 ret = ret.concat(this.hash[key]);
@@ -117,7 +119,7 @@ only argument to the constructor.
         }
         return ret;
     };
-  
+
     //make SpatialHash available in the me namespace
     me.SpatialHash = SpatialHash;
 

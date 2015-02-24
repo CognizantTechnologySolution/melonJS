@@ -65,7 +65,7 @@
             this.animations = new Map();
 
             var tiles = tileset.tiles;
-            if (typeof(tiles) !== "undefined") {
+            if (tiles) {
                 // native JSON format
                 for (i in tiles) {
                     if (tiles.hasOwnProperty(i) && ("animation" in tiles[i])) {
@@ -128,7 +128,7 @@
             // check for the texture corresponding image
             // manage inconstency between XML and JSON format
             var imagesrc = (
-                typeof(tileset[TMXConstants.TMX_TAG_IMAGE]) === "string" ?
+                typeof tileset[TMXConstants.TMX_TAG_IMAGE] === "string" ?
                 tileset[TMXConstants.TMX_TAG_IMAGE] : tileset[TMXConstants.TMX_TAG_IMAGE].source
             );
 

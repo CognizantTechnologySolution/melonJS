@@ -126,7 +126,7 @@
          * @return {me.Renderable} the added child
          */
         addChild : function (child, z) {
-            if (typeof(child.ancestor) !== "undefined") {
+            if (child.ancestor) {
                 child.ancestor.removeChildNow(child);
             }
             else {
@@ -139,18 +139,16 @@
             }
 
             // change the child z-index if one is specified
-            if (typeof(z) === "number") {
+            if (!isNaN(z)) {
                 child.z = z;
             }
-
-            // specify a z property to infinity if not defined
-            if ((typeof child.z === "undefined") || (child.z !== child.z)) {
+            else if (isNaN(child.z)) {
                 child.z = this.children.length;
             }
 
             child.ancestor = this;
             this.children.push(child);
-            if (this.autoSort === true) {
+            if (this.autoSort) {
                 this.sort();
             }
 
@@ -173,7 +171,7 @@
          */
         addChildAt : function (child, index) {
             if (index >= 0 && index < this.children.length) {
-                if (typeof(child.ancestor) !== "undefined") {
+                if (child.ancestor) {
                     child.ancestor.removeChildNow(child);
                 }
                 else {
@@ -295,7 +293,7 @@
 
             function compare(obj, prop) {
                 var v = obj[prop];
-                if (value instanceof RegExp && typeof(v) === "string") {
+                if ((value instanceof RegExp) && (typeof v === "string")) {
                     if (value.test(v)) {
                         objList.push(obj);
                     }
@@ -355,6 +353,7 @@
          * @return {me.Rect} updated child bounds
          */
         updateChildBounds : function () {
+            // XXX: Will return an inverted infinite plane if container has no children
             this.childBounds.pos.set(Infinity, Infinity);
             this.childBounds.resize(-Infinity, -Infinity);
             var childBounds;
@@ -368,7 +367,7 @@
                     }
                     // TODO : returns an "empty" rect instead of null (e.g. EntityObject)
                     // TODO : getBounds should always return something anyway
-                    if (childBounds !== null) {
+                    if (childBounds) {
                         this.childBounds.union(childBounds);
                     }
                 }
@@ -438,7 +437,7 @@
         setChildsProperty : function (prop, val, recursive) {
             for (var i = this.children.length; i >= 0; i--) {
                 var obj = this.children[i];
-                if ((recursive === true) && (obj instanceof me.Container)) {
+                if (recursive && (obj instanceof me.Container)) {
                     obj.setChildsProperty(prop, val, recursive);
                 }
                 obj[prop] = val;
@@ -520,7 +519,7 @@
         sort : function (recursive) {
             // do nothing if there is already a pending sort
             if (!this.pendingSort) {
-                if (recursive === true) {
+                if (recursive) {
                     // trigger other child container sort function (if any)
                     for (var i = this.children.length, obj; i--, (obj = this.children[i]);) {
                         if (obj instanceof me.Container) {

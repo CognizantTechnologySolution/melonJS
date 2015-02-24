@@ -59,7 +59,7 @@
                 }
                 if (_timer.elapsed >= _timer.delay) {
                     _timer.fn.apply(this);
-                    if (_timer.repeat === true) {
+                    if (_timer.repeat) {
                         _timer.elapsed -= _timer.delay;
                     } else {
                         me.timer.clearTimeout(_timer.timerId);
@@ -133,7 +133,7 @@
                 elapsed : 0,
                 repeat : false,
                 timerId : ++timerId,
-                pauseable : pauseable === true || true
+                pauseable : pauseable
             });
             return timerId;
         };
@@ -155,7 +155,7 @@
                 elapsed : 0,
                 repeat : true,
                 timerId : ++timerId,
-                pauseable : pauseable === true || true
+                pauseable : pauseable
             });
             return timerId;
         };
@@ -215,7 +215,7 @@
         api.countFPS = function () {
             framecount++;
             framedelta += delta;
-            if (framecount % 10 === 0) {
+            if ((framecount % 10) === 0) {
                 this.fps = (~~((1000 * framecount) / framedelta)).clamp(0, me.sys.fps);
                 framedelta = 0;
                 framecount = 0;

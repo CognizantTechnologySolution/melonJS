@@ -190,7 +190,7 @@
              * @type {Float32Array}
              * @readonly
              */
-            if (typeof (this.glArray) === "undefined") {
+            if (!this.glArray) {
                 this.glArray = new Float32Array([ 0.0, 0.0, 0.0, 1.0 ]);
             }
 
@@ -516,7 +516,7 @@
      */
     Object.defineProperty(me.Color.prototype, "alpha", {
         get : function () { return this.glArray[3]; },
-        set : function (value) { this.glArray[3] = typeof(value) === "undefined" ? 1.0 : (+value).clamp(0, 1); },
+        set : function (value) { this.glArray[3] = typeof value === "undefined" ? 1.0 : (+value).clamp(0, 1); },
         enumerable : true,
         configurable : true
     });

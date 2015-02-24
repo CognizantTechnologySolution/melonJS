@@ -149,7 +149,7 @@
                 size += "px";
             }
             this.font = size + " " + font_names.join(",");
-            if (typeof(fillStyle) !== "undefined") {
+            if (typeof fillStyle !== "undefined") {
                 this.fillStyle.copy(fillStyle);
             }
             if (textAlign) {

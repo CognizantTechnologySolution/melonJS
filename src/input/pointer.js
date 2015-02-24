@@ -131,7 +131,7 @@
     ];
 
     // internal constants
-    // var MOUSE_WHEEL   = 0;
+    //var MOUSE_WHEEL   = 0;
     var POINTER_MOVE    = 1;
     var POINTER_DOWN    = 2;
     var POINTER_UP      = 3;
@@ -163,7 +163,7 @@
      */
     function registerEventListener(eventList, callback) {
         for (var x = 2; x < eventList.length; ++x) {
-            if (typeof(eventList[x]) !== "undefined") {
+            if (eventList[x]) {
                 me.video.renderer.getScreenCanvas().addEventListener(eventList[x], callback, false);
             }
         }
@@ -210,7 +210,7 @@
             window.addEventListener(wheeltype, onMouseWheel, false);
 
             // set the PointerMove/touchMove/MouseMove event
-            if (typeof(obj.throttlingInterval) === "undefined") {
+            if (typeof obj.throttlingInterval === "undefined") {
                 // set the default value
                 obj.throttlingInterval = ~~(1000 / me.sys.fps);
             }
@@ -268,7 +268,7 @@
             me.game.viewport.localToWorld(0, 0, viewportOffset);
             for (var t = 0, tl = changedTouches.length; t < tl; t++) {
                 // Do not fire older events
-                if (typeof(e.timeStamp) !== "undefined") {
+                if (typeof e.timeStamp !== "undefined") {
                     if (e.timeStamp < lastTimeStamp) {
                         continue;
                     }
@@ -293,7 +293,7 @@
                     e.gameX = e.gameWorldX;
                     e.gameY = e.gameWorldY;
                 }
-                
+
                 var region = handlers.region;
                 var eventInBounds = region.getBounds().containsPoint(e.gameX, e.gameY) &&
                                     (region.shapeType === "Rectangle" || region.containsPoint(e.gameX, e.gameY));
@@ -587,10 +587,7 @@
      */
     obj.unbindPointer = function (button) {
         // clear the event status
-        obj.mouse.bind[
-            typeof(button) === "undefined" ?
-            me.input.mouse.LEFT : button
-        ] = null;
+        obj.mouse.bind[button || me.input.mouse.LEFT] = null;
     };
 
 
@@ -656,8 +653,8 @@
      * @function
      * @param {String} eventType  The event type for which the object was registered <br>
      * melonJS currently support <b>['pointermove','pointerdown','pointerup','mousewheel']</b>
-     * @param  {me.Rect|me.Polygon|me.Line|me.Ellipse} region the registered region to release for this event
-     * @param {Function} [callback="all"] if specified unregister the event only for the specific callback
+     * @param {me.Rect|me.Polygon|me.Line|me.Ellipse} region the registered region to release for this event
+     * @param {Function} [callback] if specified unregister the event only for the specific callback (if not specified, remove all listeners for the rect)
      * @example
      * // release the registered region on the 'pointerdown' event
      * me.input.releasePointerEvent('pointerdown', this);
@@ -671,9 +668,9 @@
         if (pointerEventList !== activeEventList) {
             eventType = activeEventList[pointerEventList.indexOf(eventType)];
         }
-        
+
         var handlers = evtHandlers.get(region);
-        if (typeof(callback) === "undefined") {
+        if (!callback) {
             // unregister all callbacks of "eventType" for the given region
             while (handlers.callbacks[eventType].length > 0) {
                 handlers.callbacks[eventType].pop();

@@ -36,7 +36,10 @@
              * the tile transformation matrix (if defined)
              * @ignore
              */
-            this.transform = null;
+            if (!this.transform) {
+                this.transform = new me.Matrix2d();
+            }
+
             this._super(me.Rect, "init", [x * tileset.tilewidth, y * tileset.tileheight, tileset.tilewidth, tileset.tileheight]);
 
             // Tile col / row pos
@@ -80,7 +83,7 @@
              */
             this.flipped = this.flippedX || this.flippedY || this.flippedAD;
             // create a transformation matrix if required
-            if (this.flipped === true) {
+            if (this.flipped) {
                 this.createTransform();
             }
 
@@ -93,9 +96,6 @@
          * @ignore
          */
         createTransform : function () {
-            if (this.transform === null) {
-                this.transform = new me.Matrix2d();
-            }
             // reset the matrix (in case it was already defined)
             this.transform.identity();
             var a = this.transform.val;
@@ -143,9 +143,9 @@
             }
 
             // AD flag is never set for Tile Object, use the given rotation instead
-            if (typeof(settings) !== "undefined") {
+            if (settings) {
                 var angle = settings.rotation || 0;
-                if (angle !== 0) {
+                if (angle) {
                     renderable._sourceAngle += angle;
                     // translate accordingly
                     switch (angle) {
@@ -158,15 +158,12 @@
                         case -(Math.PI / 2) :
                             renderable.translate(-this.width, this.height);
                             break;
-                        default :
-                            // this should not happen
-                            break;
                     }
                 }
             }
 
             // any H/V flipping to apply?
-            if (this.flipped === true) {
+            if (this.flipped) {
                 renderable.flipX(this.flippedX);
                 renderable.flipY(this.flippedY);
             }

@@ -52,7 +52,7 @@
              */
             _init: function () {
                 // Load previous data if local Storage is supported
-                if (me.device.localStorage === true) {
+                if (me.device.localStorage) {
                     var keys = JSON.parse(localStorage.getItem("me.save")) || [];
                     keys.forEach(function (key) {
                         data[key] = JSON.parse(localStorage.getItem("me.save." + key));
@@ -85,7 +85,7 @@
                             },
                             set : function (value) {
                                 data[prop] = value;
-                                if (me.device.localStorage === true) {
+                                if (me.device.localStorage) {
                                     localStorage.setItem("me.save." + prop, JSON.stringify(value));
                                 }
                             }
@@ -99,7 +99,7 @@
                 });
 
                 // Save keys
-                if (me.device.localStorage === true) {
+                if (me.device.localStorage) {
                     localStorage.setItem("me.save", JSON.stringify(Object.keys(data)));
                 }
             },
@@ -118,7 +118,7 @@
                 if (!isReserved(key)) {
                     if (typeof data[key] !== "undefined") {
                         delete data[key];
-                        if (me.device.localStorage === true) {
+                        if (me.device.localStorage) {
                             localStorage.removeItem("me.save." + key);
                             localStorage.setItem("me.save", JSON.stringify(Object.keys(data)));
                         }

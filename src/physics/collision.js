@@ -362,10 +362,10 @@
          * @return {Boolean} true if they should collide, false otherwise
          */
         api.shouldCollide = function (a, b) {
-            return (
+            return !!(
                 a.body && b.body &&
-                (a.body.collisionMask & b.body.collisionType) !== 0 &&
-                (a.body.collisionType & b.body.collisionMask) !== 0
+                (a.body.collisionMask & b.body.collisionType) &&
+                (a.body.collisionType & b.body.collisionMask)
             );
         };
 
@@ -402,6 +402,11 @@
          * },
          */
         api.check = function (objA, responseObject) {
+            var aLen = objA.body && objA.body.shapes.length;
+            if (!aLen) {
+                return false;
+            }
+
             var collision = 0;
             var response = responseObject || api.response;
 
@@ -416,9 +421,8 @@
                     objA.getBounds().overlaps(objB.getBounds())) {
 
                     // go trough all defined shapes in A
-                    var aLen = objA.body.shapes.length;
                     var bLen = objB.body.shapes.length;
-                    if (aLen === 0 || bLen === 0) {
+                    if (!bLen) {
                         continue;
                     }
 
@@ -439,7 +443,7 @@
                                     objB,  // a reference to the object B
                                     shapeB,
                                      // clear response object before reusing
-                                    response.clear()) === true
+                                    response.clear())
                             ) {
                                 // we touched something !
                                 collision++;

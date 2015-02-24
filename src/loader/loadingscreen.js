@@ -24,10 +24,10 @@
             this.progress = ~~(progress * this.width);
             this.invalidate = true;
         },
-       
+
         // make sure the screen is refreshed every frame
         update : function () {
-            if (this.invalidate === true) {
+            if (this.invalidate) {
                 // clear the flag
                 this.invalidate = false;
                 // and return true
@@ -138,17 +138,17 @@
                 me.video.renderer.getWidth(),
                 me.video.renderer.getHeight()
             );
-            
+
             this.loaderHdlr = me.event.subscribe(
                 me.event.LOADER_PROGRESS,
                 progressBar.onProgressUpdate.bind(progressBar)
             );
-            
+
             this.resizeHdlr = me.event.subscribe(
                 me.event.VIEWPORT_ONRESIZE,
                 progressBar.resize.bind(progressBar)
             );
-            
+
             me.game.world.addChild(progressBar, 1);
             this.iconCanvas = me.video.createCanvas(me.game.viewport.width, me.game.viewport.height, false);
             // melonJS text & logo

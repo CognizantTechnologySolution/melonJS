@@ -81,7 +81,7 @@
 
             return this;
         },
-        
+
         /**
          * clone this line segment
          * @name clone

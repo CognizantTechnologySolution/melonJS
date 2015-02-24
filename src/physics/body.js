@@ -71,7 +71,7 @@
              * @name vel
              * @memberOf me.Body
              */
-            if (typeof(this.vel) === "undefined") {
+            if (!this.vel) {
                 this.vel = new me.Vector2d();
             }
             this.vel.set(0, 0);
@@ -84,7 +84,7 @@
              * @name accel
              * @memberOf me.Body
              */
-            if (typeof(this.accel) === "undefined") {
+            if (!this.accel) {
                 this.accel = new me.Vector2d();
             }
             this.accel.set(0, 0);
@@ -97,7 +97,7 @@
              * @name friction
              * @memberOf me.Body
              */
-            if (typeof(this.friction) === "undefined") {
+            if (!this.friction) {
                 this.friction = new me.Vector2d();
             }
             this.friction.set(0, 0);
@@ -110,7 +110,7 @@
              * @name maxVel
              * @memberOf me.Body
              */
-            if (typeof(this.maxVel) === "undefined") {
+            if (!this.maxVel) {
                 this.maxVel = new me.Vector2d();
             }
             this.maxVel.set(1000, 1000);
@@ -126,7 +126,7 @@
              * @name gravity
              * @memberOf me.Body
              */
-            this.gravity = typeof(me.sys.gravity) !== "undefined" ? me.sys.gravity : 0.98;
+            this.gravity = typeof me.sys.gravity !== "undefined" ? me.sys.gravity : 0.98;
 
             /**
              * falling state of the object<br>
@@ -191,7 +191,7 @@
                 this.shapes.push(shape);
             }
 
-            if (batchInsert !== true) {
+            if (!batchInsert) {
                 // update the body bounds to take in account the added shape
                 this.updateBounds();
             }
@@ -213,8 +213,7 @@
          */
         addShapesFromJSON : function (json, id) {
             var data = json[id];
-
-            if (typeof(data) === "undefined") {
+            if (!data) {
                 throw new me.Body.Error("Identifier (" + id + ") undefined for the given PhysicsEditor JSON object)");
             }
 
@@ -318,10 +317,10 @@
             this.entity.pos.sub(overlap);
 
             // adjust velocity
-            if (overlap.x !== 0) {
+            if (overlap.x) {
                 this.vel.x = ~~(0.5 + this.vel.x - overlap.x) || 0;
             }
-            if (overlap.y !== 0) {
+            if (overlap.y) {
                 this.vel.y = ~~(0.5 + this.vel.y - overlap.y) || 0;
 
                 // cancel the falling an jumping flags if necessary
@@ -371,8 +370,8 @@
          * @protected
          */
         setVelocity : function (x, y) {
-            this.accel.x = x !== 0 ? x : this.accel.x;
-            this.accel.y = y !== 0 ? y : this.accel.y;
+            this.accel.x = x || this.accel.x;
+            this.accel.y = y || this.accel.y;
 
             // limit by default to the same max value
             this.setMaxVelocity(x, y);

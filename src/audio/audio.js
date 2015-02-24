@@ -148,7 +148,7 @@
          */
         api.load = function (sound, onload_cb, onerror_cb) {
             var urls = [];
-            if (typeof(this.audioFormats) === "undefined" || this.audioFormats.length === 0) {
+            if (!this.audioFormats || !this.audioFormats.length) {
                 throw new api.Error("target audio extension(s) should be set through me.audio.init() before calling the preloader.");
             }
             for (var i = 0; i < this.audioFormats.length; i++) {
@@ -196,15 +196,15 @@
          */
         api.play = function (sound_name, loop, onend, volume) {
             var sound = audioTracks[sound_name];
-            if (sound && typeof sound !== "undefined") {
+            if (sound) {
                 var instance_id = sound.play();
                 if (typeof loop === "boolean") {
                     // arg[0] can take different types in howler 2.0
                     sound.loop(loop, instance_id);
                 }
-                sound.volume(typeof(volume) === "number" ? volume.clamp(0.0, 1.0) : Howler.volume(), instance_id);
-                if (typeof(onend) === "function") {
-                    if (loop === true) {
+                sound.volume(typeof volume === "number" ? volume.clamp(0.0, 1.0) : Howler.volume(), instance_id);
+                if (typeof onend === "function") {
+                    if (loop) {
                         sound.on("end", onend, instance_id);
                     }
                     else {
@@ -229,7 +229,7 @@
          */
         api.fade = function (sound_name, from, to, duration, instance_id) {
             var sound = audioTracks[sound_name];
-            if (sound && typeof sound !== "undefined") {
+            if (sound) {
                 sound.fade(from, to, duration, instance_id);
             }
         };
@@ -247,7 +247,7 @@
          */
         api.stop = function (sound_name, instance_id) {
             var sound = audioTracks[sound_name];
-            if (sound && typeof sound !== "undefined") {
+            if (sound) {
                 sound.stop(instance_id);
                 // remove the defined onend callback (if any defined)
                 sound.off("end", instance_id);
@@ -268,7 +268,7 @@
          */
         api.pause = function (sound_name, instance_id) {
             var sound = audioTracks[sound_name];
-            if (sound && typeof sound !== "undefined") {
+            if (sound) {
                 sound.pause(instance_id);
             }
         };
@@ -312,7 +312,7 @@
          * me.audio.stopTrack();
          */
         api.stopTrack = function () {
-            if (current_track_id !== null) {
+            if (current_track_id) {
                 audioTracks[current_track_id].stop();
                 current_track_id = null;
             }
@@ -329,7 +329,7 @@
          * me.audio.pauseTrack();
          */
         api.pauseTrack = function () {
-            if (current_track_id !== null) {
+            if (current_track_id) {
                 audioTracks[current_track_id].pause();
             }
         };
@@ -350,7 +350,7 @@
          * me.audio.resumeTrack();
          */
         api.resumeTrack = function () {
-            if (current_track_id !== null) {
+            if (current_track_id) {
                 audioTracks[current_track_id].play();
             }
         };
@@ -402,9 +402,9 @@
          */
         api.mute = function (sound_name, instance_id, mute) {
             // if not defined : true
-            mute = (typeof(mute) === "undefined" ? true : !!mute);
+            mute = (typeof mute === "undefined" ? true : !!mute);
             var sound = audioTracks[sound_name];
-            if (sound && typeof(sound) !== "undefined") {
+            if (sound) {
                 sound.mute(mute, instance_id);
             }
         };

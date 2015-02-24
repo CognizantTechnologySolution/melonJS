@@ -116,7 +116,7 @@
                 if (pool && ((obj = pool.pop()))) {
                     args.shift();
                     // call the object onResetEvent function if defined
-                    if (typeof(obj.onResetEvent) === "function") {
+                    if (typeof obj.onResetEvent === "function") {
                         obj.onResetEvent.apply(obj, args);
                     }
                     else {
@@ -166,7 +166,7 @@
          */
         api.push = function (obj) {
             var name = obj.className;
-            if (typeof(name) === "undefined" || !entityClass[name]) {
+            if (!name || !entityClass[name]) {
                 // object is not registered, don't do anything
                 return;
             }

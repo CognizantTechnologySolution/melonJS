@@ -168,14 +168,14 @@
          * @return {Context2d}
          */
         getContext2d : function (c, opaque) {
-            if (typeof c === "undefined" || c === null) {
+            if (!c) {
                 throw new me.video.Error(
                     "You must pass a canvas element in order to create " +
                     "a 2d context"
                 );
             }
 
-            if (typeof c.getContext === "undefined") {
+            if (!c.getContext) {
                 throw new me.video.Error(
                     "Your browser does not support HTML5 canvas."
                 );
@@ -256,17 +256,15 @@
          * @param {Boolean} [enable=false]
          */
         setAntiAlias : function (context, enable) {
-            if (typeof(context) !== "undefined") {
-                // enable/disable antialis on the given context
-                me.agent.setPrefixed("imageSmoothingEnabled", enable === true, context);
-            }
+            // enable/disable antialis on the given context
+            me.agent.setPrefixed("imageSmoothingEnabled", !!enable, context);
 
             // disable antialias CSS scaling on the main canvas
             var cssStyle = this.canvas.style["image-rendering"];
-            if (enable === false && (cssStyle === "" || cssStyle === "auto")) {
+            if (!enable && (cssStyle === "" || cssStyle === "auto")) {
                 // if a specific value is set through CSS or equal to the standard "auto" one
                 this.canvas.style["image-rendering"] = "pixelated";
-            } else if (enable === true && cssStyle === "pixelated") {
+            } else if (enable && cssStyle === "pixelated") {
                 // if set to the standard "pixelated"
                 this.canvas.style["image-rendering"] = "auto";
             }

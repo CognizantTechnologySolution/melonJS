@@ -64,14 +64,16 @@
              */
             this.atlas = null;
 
-            if (typeof (atlas) !== "undefined") {
-
-                if (typeof(atlas.meta) !== "undefined") {
+            if (atlas) {
+                if (atlas.meta) {
                     // Texture Packer
                     if (atlas.meta.app.contains("texturepacker")) {
                         this.format = "texturepacker";
                         // set the texture
-                        if (typeof(texture) === "undefined") {
+                        if (texture) {
+                            this.texture = texture;
+                        }
+                        else {
                             var image = atlas.meta.image;
                             this.texture = me.utils.getImage(image);
                             if (!this.texture) {
@@ -79,8 +81,6 @@
                                     "Atlas texture '" + image + "' not found"
                                 );
                             }
-                        } else {
-                            this.texture = texture;
                         }
                     }
                     // ShoeBox
@@ -105,10 +105,9 @@
 
                 } else {
                     // a regular spritesheet ?
-                    if (typeof(atlas.framewidth) !== "undefined" &&
-                        typeof(atlas.frameheight) !== "undefined") {
+                    if (atlas.framewidth && atlas.frameheight) {
                         this.format = "Spritesheet (fixed cell size)";
-                        if (typeof(texture) !== undefined) {
+                        if (texture) {
                             // overwrite if specified
                             atlas.image = texture;
                         }
@@ -144,7 +143,7 @@
                         offset  : new me.Vector2d(s.x, s.y),
                         width   : s.w,
                         height  : s.h,
-                        angle   : (frame.rotated === true) ? nhPI : 0
+                        angle   : frame.rotated ? nhPI : 0
                     };
                 }
             });
@@ -171,8 +170,8 @@
             );
 
             // verifying the texture size
-            if (((width - margin + spacing) % (data.framewidth + spacing) !== 0 ||
-                (height - margin + spacing) % (data.frameheight + spacing) !== 0)) {
+            if (((width - margin + spacing) % (data.framewidth + spacing)) ||
+                ((height - margin + spacing) % (data.frameheight + spacing))) {
                 // "truncate size"
                 width = margin + spritecount.x * (data.framewidth + spacing);
                 height = margin + spritecount.y * (data.frameheight + spacing);
@@ -320,7 +319,7 @@
             for (var i = 0; i < names.length;++i) {
                 tpAtlas[i] = this.getRegion(names[i]);
                 indices[names[i]] = i;
-                if (tpAtlas[i] == null) {
+                if (!tpAtlas[i]) {
                     // throw an error
                     throw new me.video.renderer.Texture.Error("Texture - region for " + names[i] + " not found");
                 }

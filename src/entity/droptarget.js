@@ -72,7 +72,7 @@ me.DroptargetEntity = (function (Entity, Event) {
         setCheckMethod: function (checkMethod) {
             //  We can improve this check,
             //  because now you can use every method in theory
-            if (typeof(this[checkMethod]) !== "undefined") {
+            if (this[checkMethod]) {
                 this.checkMethod = this[checkMethod];
             }
         },

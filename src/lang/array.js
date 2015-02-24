@@ -81,7 +81,7 @@ me.TypedArray = function (a) {
     if (Array.isArray(a)) {
         this.concat(a.slice());
     }
-    else if ((arguments.length === 1) && (typeof(a) === "number")) {
+    else if ((arguments.length === 1) && (typeof a === "number")) {
         for (i = 0; i < a; i++) {
             this.push(0);
         }

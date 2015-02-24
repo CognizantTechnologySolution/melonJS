@@ -167,11 +167,10 @@
             if (child instanceof me.Container) {
                 // recursivly insert childs
                 this.insertContainer(child);
-            } else {
+            }
+            else if (child.body) {
                 // only insert object with a "physic body"
-                if (typeof (child.body) !== "undefined") {
-                    this.insert(child);
-                }
+                this.insert(child);
             }
         }
     };
@@ -190,7 +189,7 @@
         var index = -1;
 
         //if we have subnodes ...
-        if (this.nodes.length > 0) {
+        if (this.nodes.length) {
             index = this.getIndex(item.getBounds());
 
             if (index !== -1) {
@@ -204,7 +203,7 @@
         if (this.objects.length > this.max_objects && this.level < this.max_levels) {
 
             //split if we don't already have subnodes
-            if (this.nodes.length === 0) {
+            if (!this.nodes.length) {
                 this.split();
             }
 
@@ -237,7 +236,7 @@
         var returnObjects = this.objects;
 
         //if we have subnodes ...
-        if (this.nodes.length > 0) {
+        if (this.nodes.length) {
 
             var index = this.getIndex(item.getBounds());
 
@@ -275,7 +274,7 @@
         this.nodes = [];
 
         // resize the root bounds if required
-        if (typeof bounds !== "undefined") {
+        if (bounds) {
             this.bounds.pos.x = bounds.pos.x;
             this.bounds.pos.y = bounds.pos.y;
             this.bounds.width = bounds.width;

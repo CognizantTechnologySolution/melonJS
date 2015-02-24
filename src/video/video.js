@@ -153,7 +153,7 @@
             settings.transparent = !!(settings.transparent);
 
             // override renderer settings if &webgl is defined in the URL
-            if (me.game.HASH.webgl === true) {
+            if (me.game.HASH.webgl) {
                 settings.renderer = api.WEBGL;
             }
 
@@ -302,13 +302,13 @@
          * @return {Canvas}
          */
         api.createCanvas = function (width, height, screencanvas) {
-            if (width === 0 || height === 0)  {
+            if (!width || !height)  {
                 throw new api.Error("width or height was zero, Canvas could not be initialized !");
             }
 
             var _canvas = document.createElement("canvas");
 
-            if ((screencanvas === true) && (navigator.isCocoonJS) && (me.device.android2 !== true)) {
+            if (screencanvas && navigator.isCocoonJS && !me.device.android2) {
                 // enable ScreenCanvas on cocoonJS
                 _canvas.screencanvas = true;
             }
